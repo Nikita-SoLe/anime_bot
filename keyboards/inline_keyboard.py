@@ -1,22 +1,21 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from database.db_buttons import genre, anime_dict
-from keyboards.main_keyboards import get_main
-
-
-def search_kb() -> InlineKeyboardMarkup:
-
-    builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
-    builder.row(get_main()[0])
-
-    return builder.as_markup()
+from database.db_buttons import genre, anime_dict, feature_film, OVA, serials, specials
 
 
 def get_subscribed_kb() -> InlineKeyboardMarkup:
 
     builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
     builder.button(text='Kon-Anime', url='https://t.me/kon_anime')
+
+    return builder.as_markup()
+
+
+def main_menu_btn() -> InlineKeyboardMarkup:
+
+    builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
+    builder.button(text='⬇ Главное меню ⬇', callback_data='main_menu')
 
     return builder.as_markup()
 
@@ -45,22 +44,32 @@ def genre_keyboard() -> InlineKeyboardMarkup:
         builder.button(text=f'{key}', callback_data=f'{key}')
 
     builder.adjust(4)
-    builder.row(get_main()[1])
+    builder.row(InlineKeyboardButton(text='Главное меню', callback_data='main_menu'))
 
     return builder.as_markup()
 
 
-def anime_keyboard(genr, start=1) -> InlineKeyboardMarkup:
+def anime_keyboard(genr, start=1, state: str = None) -> InlineKeyboardMarkup:
     """
     Создает InlineKeyboardMarkup с кнопками аниме выбранного жанра и определенной страницы.
     Args:
         genr (str): Выбранный жанр аниме.
         start (int): Номер страницы.
+        state (str): Передает из какого состояния вызывают клавиатуру
     Returns:
         InlineKeyboardMarkup: Объект с кнопками аниме.
     """
-    file = genre
-    names = file[genr]['name']
+
+    if state == 'all':
+        names = genre[genr]['name']
+    elif state == 'feature_film':
+        names = feature_film[genr]
+    elif state == 'serials':
+        names = serials[genr]
+    elif state == 'OVA':
+        names = OVA[genr]
+    else:
+        names = specials[genr]
 
     builder = InlineKeyboardBuilder()
 
@@ -89,7 +98,7 @@ def anime_keyboard(genr, start=1) -> InlineKeyboardMarkup:
     builder.adjust(1)
 
     builder.row(*get_pagination_btn(page_num=page_num, names=names))
-    builder.row(*get_main())
+    builder.row(InlineKeyboardButton(text='Главное меню', callback_data='main_menu'))
 
     return builder.as_markup()
 

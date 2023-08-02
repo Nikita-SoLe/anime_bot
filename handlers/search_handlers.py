@@ -4,11 +4,10 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, URLInputFile
 from aiogram.types.callback_query import CallbackQuery
 
-from fsm.main_FCM import FSM_main
+from fsm.main_FCM import FSM_main, Search
 from parse.scrap import anime_dict
 from database.database import users_db
-from keyboards.inline_keyboard import anime_search_kb, description_kb
-from keyboards.main_keyboards import get_main_kb
+from keyboards.inline_keyboard import anime_search_kb, description_kb, main_menu_btn
 
 
 router: Router = Router()
@@ -22,8 +21,9 @@ async def process_search_anime(message: Message, state: FSMContext):
         message: Объект сообщения от пользователя.
         state: Состояние FSMContext.
     """
+
     users_db[message.from_user.id]['state'] = (message, state)
-    await state.set_state(FSM_main.search_inline)
+    await state.set_state(Search.search_inline)
 
     lst_anime = []
     for i, key in enumerate(anime_dict.keys()):
@@ -33,9 +33,10 @@ async def process_search_anime(message: Message, state: FSMContext):
     users_db[message.from_user.id]['search'] = lst_anime
 
     if not lst_anime:
-        await message.answer(text='К сожалению, мне не удалось найти что-то похожее.\n\n'
-                                  'Убедитесь в правильности написания вашего названия.\n\n'
-                                  'Или же в моей базе пока нет этого аниме')
+        await message.edit_text(text='К сожалению, мне не удалось найти что-то похожее.\n\n'
+                                     'Убедитесь в правильности написания вашего названия.\n\n'
+                                     'Или же в моей базе пока нет этого аниме',
+                                reply_markup=main_menu_btn())
         await state.set_state(FSM_main.search)
     elif len(lst_anime) < 10:
         await message.answer(text='Вот что я нашел', reply_markup=anime_search_kb(lst_anime))
@@ -45,31 +46,40 @@ async def process_search_anime(message: Message, state: FSMContext):
                              reply_markup=anime_search_kb(lst_anime, page=users_db[message.from_user.id]['page']))
 
 
-@router.callback_query(FSM_main.search_inline, Text(text='find_another'))
+@router.callback_query(Search.search_inline, Text(text='find_another'))
 async def find_another(callback: CallbackQuery, state: FSMContext):
+    """
+    Обрабочик кнопки "Найти другое".
+        Args:
+        callback: Объект сообщения от пользователя.
+        state: Состояние FSMContext.
+    """
+    await callback.message.delete()
 
     users_db[callback.from_user.id]['page'] = 1
     users_db[callback.from_user.id]['search'] = None
+
     await state.set_state(FSM_main.search)
     await callback.message.answer(text='Введите название, которое хотели бы найти.\n\n'
                                        'Пожалуйста, перед тем, как отправить название, '
-                                       'удостоверьтесь в правильности написанного вами названия.\n',
-                                  reply_markup=get_main_kb())
+                                       'удостоверьтесь в правильности его написания.\n',
+                                  reply_markup=main_menu_btn())
     await callback.answer()
 
 
-@router.callback_query(FSM_main.search_inline, Text(text='come_back'))
+@router.callback_query(Search.search_inline, Text(text='come_back'))
 async def press_animation(callback: CallbackQuery):
     """
     Обработчик нажатия кнопки "Назад" в поиске аниме.
     Args:
         callback: Объект callback query.
     """
+    await callback.message.delete()
     await process_search_anime(*users_db[callback.from_user.id]['state'])
     await callback.answer()
 
 
-@router.callback_query(FSM_main.search_inline, Text(text='next_page'))
+@router.callback_query(Search.search_inline, Text(text='next_page'))
 async def touch_back_page_btn(callback: CallbackQuery):
     """
     Обработчик нажатия инлайн-кнопки "Следующая страница" для списка аниме в поиске по названию.
@@ -90,7 +100,7 @@ async def touch_back_page_btn(callback: CallbackQuery):
     await callback.answer()
 
 
-@router.callback_query(FSM_main.search_inline, Text(text='previous_page'))
+@router.callback_query(Search.search_inline, Text(text='previous_page'))
 async def touch_back_page_btn(callback: CallbackQuery):
     """
     Обработчик нажатия инлайн-кнопки "Предыдущая страница" для списка аниме в поиске по названию.
@@ -107,13 +117,15 @@ async def touch_back_page_btn(callback: CallbackQuery):
     await callback.answer()
 
 
-@router.callback_query(FSM_main.search_inline)
+@router.callback_query(Search.search_inline)
 async def press_search_animation(callback: CallbackQuery):
     """
     Обработчик выбора конкретного аниме из результатов поиска.
     Args:
         callback: Объект callback query.
     """
+
+    await callback.message.delete()
     lst_keys = list(anime_dict.keys())
     name_anime = lst_keys[int(callback.data)]
 
@@ -137,3 +149,4 @@ async def press_search_animation(callback: CallbackQuery):
                                       reply_markup=description_kb(name_anime))
 
     await callback.answer()
+

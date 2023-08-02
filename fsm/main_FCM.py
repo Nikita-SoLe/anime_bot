@@ -5,28 +5,43 @@ class FSM_main(StatesGroup):
     """
     Класс FSM_main представляет состояния (states) для работы с конечными автоматами (finite state machines).
     """
-
     genre = State()
-    """
-    Состояние genre - состояние выбора жанра.
-    """
-
     search = State()
-    """
-    Состояние search - состояние поиска.
-    """
+    feature_film = State()
+    serials = State()
+    OVA = State()
+    specials = State()
 
-    search_inline = State()
-    """
-    Состояние search_inline - состояние поиска встроенного (inline) запроса.
-    """
+
+class Genre(StatesGroup):
 
     anime = State()
-    """
-    Состояние anime - состояние выбранного аниме.
-    """
-
     description = State()
-    """
-    Состояние description - состояние описания аниме.
-    """
+
+
+class Search(StatesGroup):
+    search_inline = State()
+
+
+class FeatureFilm(StatesGroup):
+
+    anime = State()
+    description = State()
+
+
+class Serials(StatesGroup):
+
+    anime = State()
+    description = State()
+
+
+class OVA_State(StatesGroup):
+
+    anime = State()
+    description = State()
+
+
+class Specials(StatesGroup):
+
+    anime = State()
+    description = State()

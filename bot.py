@@ -4,7 +4,8 @@ from aiogram import Bot, Dispatcher
 
 # Импорт пользовательских модулей
 from config_reader import config
-from handlers import command, touch_main_button, inline_handlers, admin_handlers, search_handlers
+from handlers import command, touch_main_button, inline_handlers, admin_handlers, search_handlers, \
+    feature_film_handlers, serials_handler, OVA_handlers, specials_handler
 
 # Создание экземпляра бота с использованием токена из конфигурационного файла
 bot: Bot = Bot(token=config.bot_token.get_secret_value())
@@ -27,6 +28,10 @@ async def main():
         search_handlers.router,
         admin_handlers.router,
         touch_main_button.router,
+        feature_film_handlers.router,
+        serials_handler.router,
+        OVA_handlers.router,
+        specials_handler.router,
         inline_handlers.router
     )
 
