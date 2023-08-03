@@ -52,7 +52,6 @@ async def handle_previous_page(callback: CallbackQuery, state: str):
 
 
 async def handle_press_animation(callback: CallbackQuery, state: str, status: FSMContext):
-
     if state == 'all':
         name_anime = genre[callback.message.text]['name'][int(callback.data)]
     elif state == 'feature_film':
@@ -81,8 +80,8 @@ async def handle_press_animation(callback: CallbackQuery, state: str, status: FS
         )
         await callback.message.delete()
     else:
-        await callback.message.edit_text('К сожалению, это аниме пока недоступно',
-                                         reply_markup=description_kb(name_anime))
+        await callback.message.answer('К сожалению, это аниме пока недоступно',
+                                      reply_markup=description_kb(name_anime))
         await callback.message.delete()
 
     # Установка состояния FSM в состояние "description"
@@ -98,4 +97,3 @@ async def handle_press_animation(callback: CallbackQuery, state: str, status: FS
         await status.set_state(Specials.description)
 
     await callback.answer()
-

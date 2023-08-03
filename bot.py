@@ -22,12 +22,12 @@ async def on_startup():
 
 # Главная функция, запускающая бота и настраивающая обработчики.
 async def main():
-    # Включение обработчиков (routers) в диспетчер.
+    # Включение обработчиков (routers) в диспетчере.
     dp.include_routers(
         command.router,
+        touch_main_button.router,
         search_handlers.router,
         admin_handlers.router,
-        touch_main_button.router,
         feature_film_handlers.router,
         serials_handler.router,
         OVA_handlers.router,

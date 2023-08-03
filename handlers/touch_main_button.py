@@ -36,7 +36,8 @@ async def search_for_name(callback: CallbackQuery, state: FSMContext):
     await state.set_state(FSM_main.search)
     users_db[callback.from_user.id]['page'] = 1
     users_db[callback.from_user.id]['search'] = None
-    await callback.message.edit_text(text='Введите название, которое хотели бы найти.',
+    await callback.message.edit_text(text='Введите название, которое хотели бы найти.\n'
+                                          'Пожалуйста вводите на русском.',
                                      reply_markup=main_menu_btn())
 
 

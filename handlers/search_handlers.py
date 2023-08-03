@@ -16,7 +16,7 @@ router: Router = Router()
 @router.message(FSM_main.search)
 async def process_search_anime(message: Message, state: FSMContext):
     """
-    Обработчик ввода названия для поиска аниме.
+    Обработчик ввода текста с названием для поиска аниме.
     Args:
         message: Объект сообщения от пользователя.
         state: Состояние FSMContext.
@@ -26,19 +26,19 @@ async def process_search_anime(message: Message, state: FSMContext):
     await state.set_state(Search.search_inline)
 
     lst_anime = []
-    for i, key in enumerate(anime_dict.keys()):
-        if message.text.lower() in key.lower():
-            lst_anime.append([i, key])
+    for i, name_anime in enumerate(anime_dict.keys()):
+        if message.text.lower() in name_anime.lower():
+            lst_anime.append([i, name_anime])
 
     users_db[message.from_user.id]['search'] = lst_anime
 
-    if not lst_anime:
-        await message.edit_text(text='К сожалению, мне не удалось найти что-то похожее.\n\n'
-                                     'Убедитесь в правильности написания вашего названия.\n\n'
-                                     'Или же в моей базе пока нет этого аниме',
-                                reply_markup=main_menu_btn())
+    if len(lst_anime) == 0:
+        await message.answer(text='К сожалению, мне не удалось найти что-то похожее.\n\n'
+                                  'Убедитесь в правильности написания вашего названия.\n\n'
+                                  'Или же в моей базе пока нет этого аниме',
+                             reply_markup=main_menu_btn())
         await state.set_state(FSM_main.search)
-    elif len(lst_anime) < 10:
+    elif len(lst_anime) <= 10:
         await message.answer(text='Вот что я нашел', reply_markup=anime_search_kb(lst_anime))
     elif len(lst_anime) > 10:
         users_db[message.from_user.id]['search'] = lst_anime
@@ -80,7 +80,7 @@ async def press_animation(callback: CallbackQuery):
 
 
 @router.callback_query(Search.search_inline, Text(text='next_page'))
-async def touch_back_page_btn(callback: CallbackQuery):
+async def touch_next_page_btn(callback: CallbackQuery):
     """
     Обработчик нажатия инлайн-кнопки "Следующая страница" для списка аниме в поиске по названию.
     Args:
@@ -125,13 +125,15 @@ async def press_search_animation(callback: CallbackQuery):
         callback: Объект callback query.
     """
 
-    await callback.message.delete()
     lst_keys = list(anime_dict.keys())
     name_anime = lst_keys[int(callback.data)]
 
     description = anime_dict[name_anime]['description']
 
+    await callback.message.delete()
+
     if len(description) > 0:
+
         # Отправка файла по ссылке
         image_from_url = URLInputFile(anime_dict[name_anime]['description']['img'])
         rating = anime_dict[name_anime]['description']['Рейтинг']
@@ -149,4 +151,5 @@ async def press_search_animation(callback: CallbackQuery):
                                       reply_markup=description_kb(name_anime))
 
     await callback.answer()
+
 
