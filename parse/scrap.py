@@ -169,7 +169,6 @@ def start_scrap():
     scrap_genre()
     scrap_anime()
     scrap_description()
-    return 'Finish scrap'
 
 
 if __name__ == '__main__':

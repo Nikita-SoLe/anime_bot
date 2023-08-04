@@ -16,7 +16,7 @@ def get_subscribed_kb() -> InlineKeyboardMarkup:
 
 def main_menu_btn() -> InlineKeyboardMarkup:
     builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
-    builder.button(text='⬇ Главное меню ⬇', callback_data='main_menu')
+    builder.button(text='⬇   Главное меню   ⬇', callback_data='main_menu')
 
     return builder.as_markup()
 
@@ -45,7 +45,7 @@ def genre_keyboard() -> InlineKeyboardMarkup:
         builder.button(text=f'{key}', callback_data=f'{key}')
 
     builder.adjust(4)
-    builder.row(InlineKeyboardButton(text='⬇ Главное меню ⬇',
+    builder.row(InlineKeyboardButton(text='⬇   Главное меню   ⬇',
                                      callback_data='main_menu'))
 
     return builder.as_markup()
@@ -98,8 +98,9 @@ def anime_keyboard(genr, start=1, state: str = None) -> InlineKeyboardMarkup:
                     callback_data=f'{i}'), width=1)
 
     builder.row(*get_pagination_btn(page_num=page_num, names=names))
-
-    builder.row(InlineKeyboardButton(text='⬇ Главное меню ⬇', callback_data='main_menu'))
+    if state != 'save':
+        builder.row(InlineKeyboardButton(text='🔙   Вернуться к жанрам   🔙', callback_data='back_to_genre'))
+    builder.row(InlineKeyboardButton(text='⬇   Главное меню   ⬇', callback_data='main_menu'))
 
     return builder.as_markup()
 
@@ -165,7 +166,7 @@ def anime_search_kb(names: list, page: int = None) -> InlineKeyboardMarkup:
         builder.adjust(1)
         builder.row(*get_pagination_btn(names=names, page_num=page))
 
-    builder.row(InlineKeyboardButton(text="🔍 Найти другое 🔎", callback_data='find_another'))
-    builder.row(InlineKeyboardButton(text='⬇ Главное меню ⬇', callback_data='main_menu'))
+    builder.row(InlineKeyboardButton(text="🔍   Найти другое   🔎", callback_data='find_another'))
+    builder.row(InlineKeyboardButton(text='⬇    Главное меню   ⬇', callback_data='main_menu'))
 
     return builder.as_markup()

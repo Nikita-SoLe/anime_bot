@@ -3,6 +3,7 @@ from aiogram.filters.text import Text
 from aiogram.types.callback_query import CallbackQuery
 from aiogram.fsm.context import FSMContext
 
+from handlers.touch_main_button import press_ova_btn
 from keyboards.inline_keyboard import anime_keyboard
 from fsm.main_FCM import FSM_main, OVA_State
 from database.database import users_db
@@ -40,6 +41,12 @@ async def touch_ova_next_page_btn(callback: CallbackQuery):
 @router.callback_query(OVA_State.anime, Text(text='previous_page'))
 async def touch_ova_previous_page_btn(callback: CallbackQuery):
     await handle_previous_page(callback, state='OVA')
+
+
+@router.callback_query(OVA_State.anime, Text('back_to_genre'))
+async def touch_back_to_genre_btn(callback: CallbackQuery):
+    await callback.message.delete()
+    await press_ova_btn(*users_db[callback.from_user.id]['state'])
 
 
 @router.callback_query(OVA_State.anime)

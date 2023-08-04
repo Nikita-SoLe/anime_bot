@@ -8,6 +8,7 @@ from aiogram.filters import Text
 
 # Импорт пользовательских модулей
 from database.database import users_db
+from handlers.touch_main_button import press_genre_button
 from keyboards.inline_keyboard import anime_keyboard
 from fsm.main_FCM import FSM_main, Genre
 from utils.handlers_btn import handle_next_page_btn, handle_previous_page, handle_press_animation
@@ -46,6 +47,12 @@ async def touch_genre_next_page_btn(callback: CallbackQuery):
 @router.callback_query(Genre.anime, Text(text='previous_page'))
 async def touch_genre_previous_page_btn(callback: CallbackQuery):
     await handle_previous_page(callback, state='all')
+
+
+@router.callback_query(Genre.anime, Text('back_to_genre'))
+async def touch_back_genre_btn(callback: CallbackQuery):
+    await callback.message.delete()
+    await press_genre_button(*users_db[callback.from_user.id]['state'])
 
 
 @router.callback_query(Genre.anime)

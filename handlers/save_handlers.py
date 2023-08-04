@@ -48,7 +48,8 @@ async def touch_saved_btn(callback: CallbackQuery, state: FSMContext):
     if users_db[callback.from_user.id]['save']:
         await callback.message.answer(text='Отложенные',
                                       reply_markup=anime_keyboard(users_db[callback.from_user.id]['save'],
-                                                                  users_db[callback.from_user.id]['page']))
+                                                                  users_db[callback.from_user.id]['page'],
+                                                                  state='save'))
     else:
         await callback.message.answer(text='Пока что у вас ничего нет.',
                                       reply_markup=main_menu_btn())

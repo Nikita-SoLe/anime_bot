@@ -33,6 +33,7 @@ def sum_a():
 
 
 def write_genre_film():
+
     feature_film = {}
     serials = {}
     OVA = {}

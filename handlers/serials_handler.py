@@ -3,6 +3,7 @@ from aiogram.filters.text import Text
 from aiogram.types.callback_query import CallbackQuery
 from aiogram.fsm.context import FSMContext
 
+from handlers.touch_main_button import press_serials_btn
 from keyboards.inline_keyboard import anime_keyboard
 from fsm.main_FCM import FSM_main, Serials
 from database.database import users_db
@@ -40,6 +41,12 @@ async def touch_serials_next_page_btn(callback: CallbackQuery):
 @router.callback_query(Serials.anime, Text(text='previous_page'))
 async def touch_serials_previous_page_btn(callback: CallbackQuery):
     await handle_previous_page(callback, state='serials')
+
+
+@router.callback_query(Serials.anime, Text('back_to_genre'))
+async def touch_back_genre_btn(callback: CallbackQuery):
+    await callback.message.delete()
+    await press_serials_btn(*users_db[callback.from_user.id]['state'])
 
 
 @router.callback_query(Serials.anime)

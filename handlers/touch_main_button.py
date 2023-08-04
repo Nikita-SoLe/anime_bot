@@ -12,17 +12,23 @@ router: Router = Router()
 
 
 @router.callback_query(Text("genre"))
-async def genre_button(callback: CallbackQuery, state: FSMContext):
+async def press_genre_button(callback: CallbackQuery, state: FSMContext):
     """
     Обработчик нажатия кнопки "Жанры".
     Args:
         callback: Объект сообщения от пользователя.
         state: Состояние FSMContext.
     """
-
+    users_db[callback.from_user.id]['state'] = (callback, state)
     await state.set_state(FSM_main.genre)
     users_db[callback.from_user.id]['page'] = 1
-    await callback.message.edit_text(text='Жанры', reply_markup=genre_keyboard())
+
+    try:
+        await callback.message.delete()
+    except Exception as ex:
+        pass
+
+    await callback.message.answer(text='Жанры', reply_markup=genre_keyboard())
 
 
 @router.callback_query(Text("search"))
@@ -43,30 +49,58 @@ async def search_for_name(callback: CallbackQuery, state: FSMContext):
 
 @router.callback_query(Text("feature_film"))
 async def press_feature_btn(callback: CallbackQuery, state: FSMContext):
+    users_db[callback.from_user.id]['state'] = (callback, state)
     await state.set_state(FSM_main.feature_film)
     users_db[callback.from_user.id]['page'] = 1
-    await callback.message.edit_text(text='Полнометражные фильмы', reply_markup=genre_keyboard())
+
+    try:
+        await callback.message.delete()
+    except Exception as ex:
+        pass
+
+    await callback.message.answer(text='Полнометражные фильмы', reply_markup=genre_keyboard())
 
 
 @router.callback_query(Text("serials"))
-async def press_feature_btn(callback: CallbackQuery, state: FSMContext):
+async def press_serials_btn(callback: CallbackQuery, state: FSMContext):
+    users_db[callback.from_user.id]['state'] = (callback, state)
     await state.set_state(FSM_main.serials)
     users_db[callback.from_user.id]['page'] = 1
-    await callback.message.edit_text(text='Сериалы', reply_markup=genre_keyboard())
+
+    try:
+        await callback.message.delete()
+    except Exception as ex:
+        pass
+
+    await callback.message.answer(text='Сериалы', reply_markup=genre_keyboard())
 
 
 @router.callback_query(Text("OVA"))
-async def press_feature_btn(callback: CallbackQuery, state: FSMContext):
+async def press_ova_btn(callback: CallbackQuery, state: FSMContext):
+    users_db[callback.from_user.id]['state'] = (callback, state)
     await state.set_state(FSM_main.OVA)
     users_db[callback.from_user.id]['page'] = 1
-    await callback.message.edit_text(text='OVA и ONA', reply_markup=genre_keyboard())
+
+    try:
+        await callback.message.delete()
+    except Exception as ex:
+        pass
+
+    await callback.message.answer(text='OVA и ONA', reply_markup=genre_keyboard())
 
 
 @router.callback_query(Text("specials"))
-async def press_feature_btn(callback: CallbackQuery, state: FSMContext):
+async def press_specials_btn(callback: CallbackQuery, state: FSMContext):
+    users_db[callback.from_user.id]['state'] = (callback, state)
     await state.set_state(FSM_main.specials)
     users_db[callback.from_user.id]['page'] = 1
-    await callback.message.edit_text(text='Спешлы', reply_markup=genre_keyboard())
+
+    try:
+        await callback.message.delete()
+    except Exception as ex:
+        pass
+
+    await callback.message.answer(text='Спешлы', reply_markup=genre_keyboard())
 
 
 @router.callback_query(Text("main_menu"))
