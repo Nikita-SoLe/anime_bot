@@ -1,8 +1,10 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+import database.database
 from database.db_buttons import genre, anime_dict, feature_film, OVA, serials, specials
-from utils.get_description_anime import get_ranting,get_name_text_clipping
+from utils.get_description_anime import get_ranting
+from database.database import users_db
 
 
 def get_subscribed_kb() -> InlineKeyboardMarkup:
@@ -43,7 +45,8 @@ def genre_keyboard() -> InlineKeyboardMarkup:
         builder.button(text=f'{key}', callback_data=f'{key}')
 
     builder.adjust(4)
-    builder.row(InlineKeyboardButton(text='⬇ Главное меню ⬇', callback_data='main_menu'))
+    builder.row(InlineKeyboardButton(text='⬇ Главное меню ⬇',
+                                     callback_data='main_menu'))
 
     return builder.as_markup()
 
@@ -52,8 +55,8 @@ def anime_keyboard(genr, start=1, state: str = None) -> InlineKeyboardMarkup:
     """
     Создает InlineKeyboardMarkup с кнопками аниме выбранного жанра и определенной страницы.
     Args:
-        genr (str): Выбранный жанр аниме.
-        start (int): Номер страницы.
+        genr (str): Выбранный жанр аниме
+        start (int): Номер страницы
         state (str): Передает из какого состояния вызывают клавиатуру
     Returns:
         InlineKeyboardMarkup: Объект с кнопками аниме.
@@ -67,8 +70,10 @@ def anime_keyboard(genr, start=1, state: str = None) -> InlineKeyboardMarkup:
         names = serials[genr]
     elif state == 'OVA':
         names = OVA[genr]
-    else:
+    elif state == 'specials':
         names = specials[genr]
+    else:
+        names = genr
 
     builder = InlineKeyboardBuilder()
 
@@ -92,24 +97,30 @@ def anime_keyboard(genr, start=1, state: str = None) -> InlineKeyboardMarkup:
                          f'⭐ {get_ranting(names[i])}',
                     callback_data=f'{i}'), width=1)
 
-    builder.adjust(1)
-
     builder.row(*get_pagination_btn(page_num=page_num, names=names))
+
     builder.row(InlineKeyboardButton(text='⬇ Главное меню ⬇', callback_data='main_menu'))
 
     return builder.as_markup()
 
 
-def description_kb(name) -> InlineKeyboardMarkup:
+def description_kb(name, callback) -> InlineKeyboardMarkup:
     """
     Создает InlineKeyboardMarkup с кнопками для описания аниме.
     Args:
         name (str): Название аниме.
+        callback: Callback
     Returns:
         InlineKeyboardMarkup: Объект с кнопками описания аниме.
     """
     builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
     builder.button(text='▶️~~Перейти к просмотру~~▶️', url=anime_dict[name]['url'])
+
+    if name not in users_db[callback.from_user.id]['save']:
+        builder.button(text="📋~~Смотреть позже~~📋", callback_data='save')
+    else:
+        builder.button(text='❌~~Удалить из отложенных~~❌', callback_data='delete_saved')
+
     builder.button(text='🔙~~Вернуться к списку~~🔙', callback_data='come_back')
 
     builder.adjust(1)
@@ -117,18 +128,17 @@ def description_kb(name) -> InlineKeyboardMarkup:
     return builder.as_markup()
 
 
-def anime_search_kb(names: list[str, int], page: int = None) -> InlineKeyboardMarkup:
+def anime_search_kb(names: list, page: int = None) -> InlineKeyboardMarkup:
     """
     Создает InlineKeyboardMarkup с кнопками для списка найденного аниме.
     Args:
-        names: Переменное количество аргументов с информацией о найденных аниме.
+        names: Переменные аргументы с информацией о найденных аниме
         page (int): Номер страницы по умолчанию None
     Returns:
         InlineKeyboardMarkup: Объект с кнопками найденного аниме.
     """
     builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
 
-    print(names)
     if not page:
         for name in names:
             builder.button(text=f'  {str(name[1][:32]) + "..." if len(str(name[1])) > 35 else str(name[1])}   '
@@ -156,6 +166,6 @@ def anime_search_kb(names: list[str, int], page: int = None) -> InlineKeyboardMa
         builder.row(*get_pagination_btn(names=names, page_num=page))
 
     builder.row(InlineKeyboardButton(text="🔍 Найти другое 🔎", callback_data='find_another'))
-    builder.row(InlineKeyboardButton(text="⬇ Главное меню ⬇", callback_data='main_menu'))
+    builder.row(InlineKeyboardButton(text='⬇ Главное меню ⬇', callback_data='main_menu'))
 
     return builder.as_markup()

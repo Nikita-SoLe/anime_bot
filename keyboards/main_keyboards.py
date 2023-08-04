@@ -25,6 +25,7 @@ def get_main_kb() -> InlineKeyboardMarkup:
     kb.button(text="Спешлы", callback_data="specials")
     kb.row(*main_btn())
     kb.adjust(2)
+    kb.row(InlineKeyboardButton(text='📋 Отложенные 📋', callback_data='saved'))
 
     return kb.as_markup()
 

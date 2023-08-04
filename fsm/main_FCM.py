@@ -45,3 +45,9 @@ class Specials(StatesGroup):
 
     anime = State()
     description = State()
+
+
+class Save(StatesGroup):
+
+    anime = State()
+    description = State()

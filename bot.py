@@ -5,7 +5,7 @@ from aiogram import Bot, Dispatcher
 # Импорт пользовательских модулей
 from config_reader import config
 from handlers import command, touch_main_button, inline_handlers, admin_handlers, search_handlers, \
-    feature_film_handlers, serials_handler, OVA_handlers, specials_handler
+    feature_film_handlers, serials_handler, OVA_handlers, specials_handler, save_handlers
 
 # Создание экземпляра бота с использованием токена из конфигурационного файла
 bot: Bot = Bot(token=config.bot_token.get_secret_value())
@@ -26,13 +26,14 @@ async def main():
     dp.include_routers(
         command.router,
         touch_main_button.router,
+        save_handlers.router,
         search_handlers.router,
         admin_handlers.router,
         feature_film_handlers.router,
         serials_handler.router,
         OVA_handlers.router,
         specials_handler.router,
-        inline_handlers.router
+        inline_handlers.router,
     )
 
     # Удаление вебхука (если был настроен) и удаление ожидающих обновлений перед запуском бота

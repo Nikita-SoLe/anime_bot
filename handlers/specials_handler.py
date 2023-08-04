@@ -22,7 +22,12 @@ async def press_specials_film_genre_btn(callback: CallbackQuery, state: FSMConte
                                                               start=users_db[callback.from_user.id]["page"],
                                                               state="specials"))
 
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except Exception:
+        # Обработка ошибки, если сообщение уже было удалено
+        pass
+
     # Установка состояния FSM в состояние "anime" для сериалов
     await state.set_state(Specials.anime)
 

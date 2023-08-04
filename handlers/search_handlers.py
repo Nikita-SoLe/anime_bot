@@ -144,11 +144,11 @@ async def press_search_animation(callback: CallbackQuery):
                     f"Тип: {description['Тип']}\n"
                     f"Возрастные ограничения: {description['Возрастные ограничения']}\n"
                     f"Длительность: {description['Длительность']}",
-            reply_markup=description_kb(name_anime)
+            reply_markup=description_kb(name_anime, callback=callback)
         )
     else:
         await callback.message.answer(text='К сожалению это аниме пока не доступно',
-                                      reply_markup=description_kb(name_anime))
+                                      reply_markup=description_kb(name_anime, callback=callback))
 
     await callback.answer()
 

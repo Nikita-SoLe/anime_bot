@@ -28,7 +28,12 @@ async def press_genre(callback: CallbackQuery, state: FSMContext):
                                                               start=users_db[callback.from_user.id]["page"],
                                                               state="all"))
 
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except Exception:
+        # Обработка ошибки, если сообщение уже было удалено
+        pass
+
     # Установка состояния FSM в состояние "anime"
     await state.set_state(Genre.anime)
 
@@ -45,6 +50,7 @@ async def touch_genre_previous_page_btn(callback: CallbackQuery):
 
 @router.callback_query(Genre.anime)
 async def press_genre_animation(callback: CallbackQuery, state: FSMContext):
+    print(callback.data)
     await handle_press_animation(callback, state='all', status=state)
 
 

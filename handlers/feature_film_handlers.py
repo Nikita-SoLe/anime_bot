@@ -21,7 +21,12 @@ async def press_feature_film_genre_btn(callback: CallbackQuery, state: FSMContex
                                                               start=users_db[callback.from_user.id]["page"],
                                                               state="feature_film"))
 
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except Exception:
+        # Обработка ошибки, если сообщение уже было удалено
+        pass
+
     # Установка состояния FSM в состояние "anime" для полнометражных фильмов
     await state.set_state(FeatureFilm.anime)
 
