@@ -165,10 +165,55 @@ def scrap_description():
     print('Finish_scrap_description')
 
 
+def write_genre_film():
+
+    feature_film = {}
+    serials = {}
+    OVA = {}
+    special = {}
+
+    for key in genre.keys():
+        lst_feature = []
+        lst_serials = []
+        ova_lst = []
+        special_lst = []
+        for name in genre[key]['name']:
+            print(name)
+            if name in anime_dict:
+                if anime_dict[name]['description']:
+                    type_ = anime_dict[name]['description']['Тип']
+                    if type_ == "ТВ Сериал":
+                        lst_serials.append(name)
+                    elif type_ == "ONA" or type_ == "OVA":
+                        ova_lst.append(name)
+                    elif type_ == "Фильм":
+                        lst_feature.append(name)
+                    elif type_ == "Спешл":
+                        special_lst.append(name)
+
+        feature_film[key] = lst_feature
+        serials[key] = lst_serials
+        OVA[key] = ova_lst
+        special[key] = special_lst
+
+    with open('database/feature.json', 'w', encoding='utf-8') as file:
+        json.dump(feature_film, file, indent=4, ensure_ascii=False)
+
+    with open('database/serials.json', 'w', encoding='utf-8') as file:
+        json.dump(serials, file, indent=4, ensure_ascii=False)
+
+    with open('database/OVA.json', 'w', encoding='utf-8') as file:
+        json.dump(OVA, file, indent=4, ensure_ascii=False)
+
+    with open('database/special.json', 'w', encoding='utf-8') as file:
+        json.dump(special, file, indent=4, ensure_ascii=False)
+
+
 def start_scrap():
     scrap_genre()
     scrap_anime()
     scrap_description()
+    write_genre_film()
 
 
 if __name__ == '__main__':

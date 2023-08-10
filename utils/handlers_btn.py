@@ -84,9 +84,9 @@ async def handle_press_animation(callback: CallbackQuery, state: str, status: FS
             image_from_url,
             caption=f"{name_anime}\n"
                     f"Рейтинг: {'Нет оценок' if rating == 'Нет оценок' else f'{rating}/10'}\n"
-                    f"Тип: {description['Тип']}\n"
-                    f"Возрастные ограничения: {description['Возрастные ограничения']}\n"
-                    f"Длительность: {description['Длительность']}",
+                    f"Тип: {description['Тип'] if 'Тип' in description else '??'}\n"
+                    f"Дата выходы: {description['Год выхода'] if 'Год выхода' in description else '??'}\n"
+                    f"Страна: {description['Страна'] if 'Страна' in description else '??'}",
             reply_markup=description_kb(name_anime, callback=callback)
         )
         await callback.message.delete()

@@ -49,7 +49,6 @@ async def touch_back_to_genre_btn(callback: CallbackQuery):
     await press_specials_btn(*users_db[callback.from_user.id]['state'])
 
 
-
 @router.callback_query(Specials.anime)
 async def press_ova_animation(callback: CallbackQuery, state: FSMContext):
     await handle_press_animation(callback, state='specials', status=state)

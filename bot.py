@@ -14,12 +14,6 @@ bot: Bot = Bot(token=config.bot_token.get_secret_value())
 dp: Dispatcher = Dispatcher()
 
 
-# Функция, выполняющаяся при старте бота.
-# Отправляет сообщение в чат при перезапуске бота.
-async def on_startup():
-    await bot.send_message(chat_id=bot.id, text="Пожалуйста пропишите команду /start, для корректной работы бота")
-
-
 # Главная функция, запускающая бота и настраивающая обработчики.
 async def main():
     # Включение обработчиков (routers) в диспетчере.
@@ -38,7 +32,6 @@ async def main():
 
     # Удаление вебхука (если был настроен) и удаление ожидающих обновлений перед запуском бота
     await bot.delete_webhook(drop_pending_updates=True)
-
     # Запуск бота в режиме "получение обновлений с помощью long polling"
     await dp.start_polling(bot)
 

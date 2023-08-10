@@ -44,7 +44,7 @@ def genre_keyboard() -> InlineKeyboardMarkup:
     for key in genre.keys():
         builder.button(text=f'{key}', callback_data=f'{key}')
 
-    builder.adjust(4)
+    builder.adjust(3)
     builder.row(InlineKeyboardButton(text='⬇   Главное меню   ⬇',
                                      callback_data='main_menu'))
 
@@ -82,24 +82,28 @@ def anime_keyboard(genr, start=1, state: str = None) -> InlineKeyboardMarkup:
     stop = start * 10
     start = (start - 1) * 10
 
-    if len(names) >= stop:
-        for i in range(start, stop):
-            builder.row(
-                InlineKeyboardButton(
-                    text=f'  {names[i][:32] + "..." if len(names[i]) > 35 else names[i]}   '
-                         f'⭐ {get_ranting(names[i])}',
-                    callback_data=f'{i}'), width=1)
-    else:
-        for i in range(start, len(names)):
-            builder.row(
-                InlineKeyboardButton(
-                    text=f'  {names[i][:32] + "..." if len(names[i]) > 35 else names[i]}   '
-                         f'⭐ {get_ranting(names[i])}',
-                    callback_data=f'{i}'), width=1)
+    if len(names) > 0:
+        if len(names) >= stop:
+            for i in range(start, stop):
+                builder.row(
+                    InlineKeyboardButton(
+                        text=f'  {names[i][:32] + "..." if len(names[i]) > 35 else names[i]}   '
+                             f'⭐ {get_ranting(names[i])}',
+                        callback_data=f'{i}'), width=1)
+        else:
+            for i in range(start, len(names)):
+                builder.row(
+                    InlineKeyboardButton(
+                        text=f'  {names[i][:32] + "..." if len(names[i]) > 35 else names[i]}   '
+                             f'⭐ {get_ranting(names[i])}',
+                        callback_data=f'{i}'), width=1)
 
-    builder.row(*get_pagination_btn(page_num=page_num, names=names))
+    if len(names) > 10:
+        builder.row(*get_pagination_btn(page_num=page_num, names=names))
+
     if state != 'save':
         builder.row(InlineKeyboardButton(text='🔙   Вернуться к жанрам   🔙', callback_data='back_to_genre'))
+
     builder.row(InlineKeyboardButton(text='⬇   Главное меню   ⬇', callback_data='main_menu'))
 
     return builder.as_markup()
