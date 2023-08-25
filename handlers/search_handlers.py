@@ -5,7 +5,7 @@ from aiogram.types import Message, URLInputFile
 from aiogram.types.callback_query import CallbackQuery
 
 from fsm.main_FCM import FSM_main, Search
-from parse.scrap import anime_dict
+from database.db_buttons import anime_dict
 from database.database import users_db
 from keyboards.inline_keyboard import anime_search_kb, description_kb, main_menu_btn
 

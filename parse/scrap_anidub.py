@@ -1,7 +1,12 @@
+import asyncio
+
 import requests
-import time
 from bs4 import BeautifulSoup
 import json
+
+from database.db_buttons import genre, anime_dict, get_anime_dict, get_genre, \
+    get_feature, get_serials, get_OVA, get_special
+from database import db_buttons
 
 
 def read_anidub():
@@ -16,7 +21,7 @@ def read_anidub():
             file.write(html)
 
 
-def scrap_genre():
+async def scrap_genre():
 
     genre = {}
 
@@ -33,7 +38,8 @@ def scrap_genre():
             href = item.find('a')['href']
             name = item.text
 
-            genre[name] = {'url': href}
+            if name not in ["Полнометражное", "Короткометражное", "OVA / ONA"]:
+                genre[name] = {'url': href}
 
     with open('database/anidub.json', 'w', encoding='utf-8') as file:
         json.dump(genre, file, ensure_ascii=False, indent=4)
@@ -45,7 +51,7 @@ def get_anidub_genres() -> dict:
         return genres
 
 
-def scrap_anime():
+async def scrap_anime():
     genres = get_anidub_genres()
     anime_dict_bd = {}
 
@@ -62,7 +68,7 @@ def scrap_anime():
             page_get = requests.get(url)
             html_code = page_get.text
 
-            time.sleep(0.3)
+            await asyncio.sleep(0.3)
 
             print(page_get.status_code)
             if page_get.status_code == 200:
@@ -94,11 +100,11 @@ def scrap_anime():
 
 
 def get_anidub_bd() -> dict:
-    with open('../database/anidub_anime_db.json', 'r', encoding='utf-8') as file:
+    with open('database/anidub_anime_db.json', 'r', encoding='utf-8') as file:
         return json.load(file)
 
 
-def scrap_description():
+async def scrap_description():
 
     anime_db = get_anidub_bd()
 
@@ -113,7 +119,8 @@ def scrap_description():
         url = value['url']
         page = requests.get(url)
 
-        time.sleep(0.1)
+        await asyncio.sleep(0.1)
+
         html_code = page.text
         print(page.status_code)
 
@@ -160,6 +167,71 @@ def scrap_description():
         json.dump(anime_db, file, indent=4, ensure_ascii=False)
 
 
+async def sort_anime_type():
+    print("Начало сортировки")
+    feature_film = {}
+    serials = {}
+    OVA = {}
+    special = {}
+
+    for key in genre.keys():
+        lst_feature = []
+        lst_serials = []
+        ova_lst = []
+        special_lst = []
+        for name in genre[key]['name']:
+            print(name)
+            if name in anime_dict:
+                if anime_dict[name]['description']:
+                    if 'Тип' in anime_dict[name]['description']:
+                        type_ = anime_dict[name]['description']['Тип']
+                        if type_ in ["ТВ Сериал", 'Короткометражное']:
+                            lst_serials.append(name)
+                        elif type_ in ["ONA", 'OVA']:
+                            ova_lst.append(name)
+                        elif type_ in ["Фильм", 'Короткометражный']:
+                            lst_feature.append(name)
+                        elif type_ == "Спешл":
+                            special_lst.append(name)
+                    else:
+                        lst_serials.append(name)
+
+        feature_film[key] = lst_feature
+        serials[key] = lst_serials
+        OVA[key] = ova_lst
+        special[key] = special_lst
+
+    with open('database/feature.json', 'w', encoding='utf-8') as file:
+        json.dump(feature_film, file, indent=4, ensure_ascii=False)
+
+    with open('database/serials.json', 'w', encoding='utf-8') as file:
+        json.dump(serials, file, indent=4, ensure_ascii=False)
+
+    with open('database/OVA.json', 'w', encoding='utf-8') as file:
+        json.dump(OVA, file, indent=4, ensure_ascii=False)
+
+    with open('database/special.json', 'w', encoding='utf-8') as file:
+        json.dump(special, file, indent=4, ensure_ascii=False)
+
+    print("Конец сортировки")
+
+
+async def start_scrap():
+    await scrap_genre()
+    await asyncio.sleep(2)
+    await scrap_anime()
+    await asyncio.sleep(60 * 20)
+    await scrap_description()
+    await asyncio.sleep(60 * 60)
+    await sort_anime_type()
+
+    db_buttons.anime_dict = get_anime_dict()
+    db_buttons.genre = get_genre()
+    db_buttons.feature_film = get_feature()
+    db_buttons.serials = get_serials()
+    db_buttons.OVA = get_OVA()
+    db_buttons.specials = get_special()
+
 
 if __name__ == "__main__":
-    scrap_description()
+    pass

@@ -11,7 +11,6 @@ async def handle_next_page_btn(callback: CallbackQuery, state: str):
     # Общий обработчик нажатия кнопки "Следующая страница" для списка аниме выбранного жанра.
     gnr = callback.message.text
 
-    print(gnr)
     if state == 'all':
         names = genre[gnr]['name']
     elif state == 'feature_film':

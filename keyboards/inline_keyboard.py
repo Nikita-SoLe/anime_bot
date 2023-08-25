@@ -124,7 +124,7 @@ def description_kb(name, callback) -> InlineKeyboardMarkup:
     if name not in users_db[callback.from_user.id]['save']:
         builder.button(text="📋~~Смотреть позже~~📋", callback_data='save')
     else:
-        builder.button(text='❌~~Удалить из отложенных~~❌', callback_data='delete_saved')
+        builder.button(text='❌~Удалить из отложенных~❌', callback_data='delete_saved')
 
     builder.button(text='🔙~~Вернуться к списку~~🔙', callback_data='come_back')
 

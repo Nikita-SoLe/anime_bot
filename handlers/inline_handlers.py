@@ -57,7 +57,7 @@ async def touch_back_genre_btn(callback: CallbackQuery):
 
 @router.callback_query(Genre.anime)
 async def press_genre_animation(callback: CallbackQuery, state: FSMContext):
-    print(callback.data)
+
     await handle_press_animation(callback, state='all', status=state)
 
 

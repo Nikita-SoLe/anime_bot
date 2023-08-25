@@ -8,7 +8,7 @@ from handlers import command, touch_main_button, inline_handlers, admin_handlers
     feature_film_handlers, serials_handler, OVA_handlers, specials_handler, save_handlers
 
 # Создание экземпляра бота с использованием токена из конфигурационного файла
-bot: Bot = Bot(token=config.bot_token.get_secret_value())
+bot: Bot = Bot(token=config.bot_token)
 
 # Создание экземпляра диспетчера (отвечает за обработку входящих сообщений и команд)
 dp: Dispatcher = Dispatcher()

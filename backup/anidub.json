@@ -1,0 +1,101 @@
+{
+    "Сказка": {
+        "url": "/anime/skazka/"
+    },
+    "Боевые искусства": {
+        "url": "/anime/boevye-iskusstva/"
+    },
+    "Комедия": {
+        "url": "/anime/komedija/"
+    },
+    "Киберпанк": {
+        "url": "/anime/cyberpunk/"
+    },
+    "Фэнтези": {
+        "url": "/anime/fehntezi/"
+    },
+    "Фантастика": {
+        "url": "/anime/fantastika/"
+    },
+    "Апокалиптика": {
+        "url": "/anime/apocalyptica/"
+    },
+    "Постапокалиптика": {
+        "url": "/anime/postapokaliptika/"
+    },
+    "Романтика": {
+        "url": "/anime/romantika/"
+    },
+    "Парапсихология": {
+        "url": "/anime/parapsihologiya/"
+    },
+    "Мистика": {
+        "url": "/anime/mistika/"
+    },
+    "Повседневность": {
+        "url": "/anime/povsednevnost/"
+    },
+    "Меха": {
+        "url": "/anime/meha/"
+    },
+    "Приключения": {
+        "url": "/anime/prikljuchenija/"
+    },
+    "Драма": {
+        "url": "/anime/drama/"
+    },
+    "Детектив": {
+        "url": "/anime/detektiv/"
+    },
+    "Добуцу": {
+        "url": "/anime/dobutsu/"
+    },
+    "Пародия": {
+        "url": "/anime/parodiya/"
+    },
+    "Боевик": {
+        "url": "/anime/boevik/"
+    },
+    "Школа": {
+        "url": "/anime/shkola/"
+    },
+    "Самураи": {
+        "url": "/anime/samurai/"
+    },
+    "Музыкальное": {
+        "url": "/anime/muzykalnoe/"
+    },
+    "Отаку": {
+        "url": "/anime/otaku/"
+    },
+    "Триллер": {
+        "url": "/anime/thriller/"
+    },
+    "Махо-сёдзё": {
+        "url": "/anime/maho-syodzyo/"
+    },
+    "Сёнен": {
+        "url": "/anime/sjonjen/"
+    },
+    "Сёдзё": {
+        "url": "/anime/sjodzjo/"
+    },
+    "Спокон (Спорт)": {
+        "url": "/anime/spokon-sport/"
+    },
+    "Ужасы": {
+        "url": "/anime/uzhasy/"
+    },
+    "Юри": {
+        "url": "/anime/yuri/"
+    },
+    "Гарем": {
+        "url": "/anime/garem/"
+    },
+    "Этти": {
+        "url": "/anime/etti/"
+    },
+    "Идолы": {
+        "url": "/anime/idoly/"
+    }
+}

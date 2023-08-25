@@ -1,19 +1,10 @@
-from pydantic import BaseSettings, SecretStr
+import env
 
 
-class Settings(BaseSettings):
-    # Желательно использовать SecretStr для конфиденциальных данных
-    bot_token: SecretStr
-    admin_id_nikita: int
-    chat_id: int
-
-    # Вложенный класс с доп. указаниями для настройки
-    class Config:
-        # Имя файла, откуда будут прочитаны данные
-        # (Относительно текущей рабочей директории)
-        env_file = '.env'
-        # Кодировка читаемого файла
-        env_file_encoding = 'utf-8'
+class Settings:
+    bot_token = env.BOT_TOKEN
+    admin_id_nikita = env.ADMIN_ID_NIKITA
+    chat_id = env.CHAT_ID
 
 
 config = Settings()

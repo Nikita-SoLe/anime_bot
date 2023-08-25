@@ -21,7 +21,7 @@ async def touch_save_btn(callback: CallbackQuery):
         await callback.answer(text='Добавлено в отложенные.', show_alert=True)
     else:
         await callback.answer(text='Уже есть в вашем списке', show_alert=True)
-    print(users_db[callback.from_user.id])
+
 
 
 @router.callback_query(Text('delete_saved'))

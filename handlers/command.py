@@ -1,9 +1,9 @@
 from copy import deepcopy
 from aiogram import Router, Bot
-from aiogram.filters.text import Text
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters.command import Command
 from database.database import user_dict_template, users_db
+from aiogram.filters import Text
 
 from keyboards.main_keyboards import get_main_kb, admin_kb
 from keyboards.inline_keyboard import get_subscribed_kb
@@ -20,10 +20,9 @@ async def command_start(message: Message, bot: Bot):
         message: Объект сообщения от пользователя.
         bot: xxx
     """
-    print(message.from_user.id)
-    print(bot.id)
+
     is_subscribed = await bot.get_chat_member(chat_id='-1001826045814', user_id=message.from_user.id)
-    print(type(is_subscribed))
+
     if is_subscribed.status not in ['creator', 'member']:
         await message.answer("Здравствуй!\n"
                              f"{message.from_user.first_name}\n"

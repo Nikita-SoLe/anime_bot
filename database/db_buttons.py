@@ -37,15 +37,15 @@ def get_special() -> dict:
         return file
 
 
-def get_anidub_db() -> dict:
+def get_anime_dict() -> dict:
     with open('database/anidub_anime_db.json', 'r', encoding='utf-8') as file:
         return json.load(file)
 
 
-genre: dict = get_genre()
 anime_dict: dict = get_anime_dict()
+genre: dict = get_genre()
 feature_film: dict = get_feature()
 serials: dict = get_serials()
 OVA: dict = get_OVA()
 specials: dict = get_special()
-anidub_db: dict = get_anidub_db()
+
